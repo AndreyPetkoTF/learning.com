@@ -1,0 +1,47 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.episode-list {
+    width: 300px;
+}
+
+.episod-list-item {
+    display: flex;
+    border-bottom: 1px dashed #cecece;
+    justify-content: space-between;
+    padding: 10px 0;
+    align-items: center;
+}
+
+.episod-list-item .position {
+    color: #00B1B4;
+    font-weight: bold;
+}
+
+.episod-list-item .title {
+    margin-right: auto;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.episod-list-item .title a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.episod-list-item .title a:hover {
+    text-decoration: underline;
+}
+

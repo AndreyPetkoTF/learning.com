@@ -1,0 +1,42 @@
+body, html {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: sans-serif;
+}
+
+header, footer {
+    background: #c5c5c5;
+}
+
+main {
+    display: flex;
+}
+
+aside {
+    margin-right: 40px;
+}
+
+.container {
+    max-width: 1000px;
+    min-height: 100%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.container > * {
+    padding: 0 20px;
+}
+
+footer {
+    margin-top: auto;
+}
+
+@media screen and (max-width: 768px) {
+    main {
+        flex-direction: column-reverse;
+    }
+}

@@ -1,0 +1,25 @@
+
+h4 {
+    margin: 0;
+}
+
+body, html {
+    height: 100%;
+}
+
+body {
+    font-family: sans-serif;
+    max-width: 500px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.media {
+    display: flex;
+}
+
+.media-left {
+    margin-right: 1em;
+}

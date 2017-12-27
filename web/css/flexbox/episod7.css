@@ -1,0 +1,41 @@
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: sans-serif;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    background: #00b1b3;
+    padding: 1em;
+}
+
+.nav-item {
+    color: white;
+    text-decoration: none;
+    padding: 0 1em;
+}
+
+@media screen and (max-width: 767px) {
+    nav {
+        display: block;
+    }
+
+    .nav-item {
+        display: block;
+    }
+}
+
+.nav-item:hover {
+    text-decoration: underline;
+}
+
+.nav-item > i {
+    color: #005152;
+    padding-right: 6px;
+}

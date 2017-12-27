@@ -1,0 +1,95 @@
+
+services:
+  learning.basic_inspection.service:
+    class: AppBundle\Patterns\Decorator\BasicInspection
+
+  learning.adapter.book:
+    class: AppBundle\Patterns\Adapter\Book
+
+  learning.adapter.person:
+    class: AppBundle\Patterns\Adapter\Person
+
+  learning.adapter.kindle:
+    class: AppBundle\Patterns\Adapter\Kindle
+
+  learning.adapter.nook:
+    class: AppBundle\Patterns\Adapter\Nook
+
+  learning.adapter.kindle_adapter:
+    class: AppBundle\Patterns\Adapter\eReaderAdapter
+    arguments:
+      - "@learning.adapter.kindle"
+
+  learning.utility.service:
+    class: AppBundle\Traits\UtilityService
+
+  learning.delegation.person_writer:
+    class: AppBundle\DelegationWithCall\PersonWriter
+
+  learning.delegation.person:
+    class: AppBundle\DelegationWithCall\Person
+    arguments:
+      - "@learning.delegation.person_writer"
+
+  learning.closures.process_sale:
+    class: AppBundle\Closures\ProcessSale
+
+  learning.closures.service:
+    class: AppBundle\Closures\ClosureService
+
+  learning.template.turkey_sub:
+    class: AppBundle\Patterns\Template\TurkeySub
+
+  learning.strategy.logger_service:
+    class: AppBundle\Patterns\Strategy\LoggerService
+
+  learning.strategy.log_to_database:
+    class: AppBundle\Patterns\Strategy\LogToDatabase
+    tags:
+      - { name: learning.logger, alias: database }
+
+  learning.strategy.log_to_file:
+    class: AppBundle\Patterns\Strategy\LogToFile
+    tags:
+      - { name: learning.logger, alias: file }
+
+  learning.sort.service:
+    class: AppBundle\Services\SortService
+
+  learning.search.service:
+    class: AppBundle\Services\SearchService
+
+  learning.chain.home_status:
+    class: AppBundle\Patterns\ChainOfResponsibility\HomeStatus
+
+  learning.chain.alarm:
+    class: AppBundle\Patterns\ChainOfResponsibility\Alarm
+
+  learning.chain.lights:
+    class: AppBundle\Patterns\ChainOfResponsibility\Lights
+
+  learning.chain.locks:
+    class: AppBundle\Patterns\ChainOfResponsibility\Locks
+
+  learning.generator.range:
+    class: AppBundle\Generator\RangeGenerator
+
+  learning.spl.spl_examples:
+    class: AppBundle\SPL\SplExamples
+
+  learning.array_work.helper:
+    class: AppBundle\Services\ArrayWorkHelper
+
+  learning.translator.service:
+    class: AppBundle\Services\TranslatorService
+
+  learning.parse.service:
+    class: AppBundle\Services\ParseService
+
+  learning.consumer.mail_sender:
+    class: AppBundle\Services\RabbitMq\MailSenderConsumer
+
+
+  # FACTORIES
+  learning.factory.customer:
+    class: AppBundle\Factory\CustomerFactory
