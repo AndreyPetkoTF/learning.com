@@ -47,8 +47,6 @@ class SortService
                     $swapped = true;
                 }
             }
-
-//            dump('next');
         } while($swapped !== false);
 
         return $arr;
@@ -254,7 +252,6 @@ class SortService
 
         throw new \Exception("The insertion index was not found");
     }
-
 
     /**
      * @param array $arr

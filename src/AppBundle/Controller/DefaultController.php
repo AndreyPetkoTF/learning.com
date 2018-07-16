@@ -12,6 +12,8 @@ use AppBundle\Services\Workers\PerMonthWorker;
 use AppBundle\Services\Workers\WorkerRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class DefaultController
@@ -38,6 +40,26 @@ class DefaultController extends Controller
         return $this->render('AppBundle:Layout:index.html.twig', [
 
         ]);
+    }
+
+    /**
+     * @Route("/rsa", name="rsa")
+     */
+    public function rsaAction()
+    {
+        $rsaService = $this->get('learning.rsa.service');
+        $data = 'blabla';
+
+        $rsaService->setPassphrase('123');
+        $rsaService->setPrivateKey('./mykey.pem');
+        $rsaService->setPublicKey('./mykey.pub');
+
+        $encryptedData = $rsaService->encrypt($data);
+        $result = $rsaService->decrypt($encryptedData);
+
+        dump($encryptedData);
+        dump($result);
+        die;
     }
 
 
@@ -142,6 +164,8 @@ class DefaultController extends Controller
     {
         $closureService = $this->get('learning.closures.service');
         $factorial = $closureService->getFactorial();
+        dump(get_class_methods($factorial));
+        die;
 
         $result = $factorial->__invoke($number);
 
@@ -181,7 +205,7 @@ class DefaultController extends Controller
 
         $arrayWorker->addHandler('round');
         $arrayWorker->addCustomHandler(function ($item) {
-           return $item * 2;
+            return $item * 2;
         });
 
         $array = $arrayWorker->handle($array);
@@ -222,6 +246,16 @@ class DefaultController extends Controller
 
     }
 
+    /**
+     * @Route("/bit", name="bit")
+     */
+    public function bitAction()
+    {
+        $result = file_get_contents('https://api.coindesk.com/v1/bpi/currentprice.json');
+        $object = json_decode($result);
+        dump($object->bpi);
+        die;
+    }
 
     /**
      * @Route("/search", name="search")
@@ -230,7 +264,7 @@ class DefaultController extends Controller
     {
         $arr = [];
 
-        for($i = 0; $i < 1000; $i++) {
+        for ($i = 0; $i < 1000; $i++) {
             $arr[] = $i;
         }
 
@@ -249,7 +283,7 @@ class DefaultController extends Controller
         $a = '1';
         $b = &$a;
         $b = "2$b";
-        echo $a.", ".$b;
+        echo $a . ", " . $b;
         die;
     }
 
@@ -332,12 +366,13 @@ class DefaultController extends Controller
         $pattern = '#(@[a-zA-Z]+\s*[a-zA-Z0-9, ()_].*)#';
         preg_match_all($pattern, $comment, $matches, PREG_PATTERN_ORDER);
 
-        echo "<pre>"; print_r($matches);
+        echo "<pre>";
+        print_r($matches);
 
         die;
     }
-    
-    
+
+
     /**
      * @Route("/tf-info", name="tf_info")
      */
@@ -345,44 +380,190 @@ class DefaultController extends Controller
     {
         $url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=TECH.L&interval=60min&apikey=038SOZHRQZJTZDPQ';
 
-        $result = (array)json_decode(file_get_contents($url));
+        $result = (array) json_decode(file_get_contents($url));
 
-        $metaData = (array)$result['Meta Data'];
-        $info = (array)$result['Time Series (Daily)'];
+        $metaData = (array) $result['Meta Data'];
+        $info = (array) $result['Time Series (Daily)'];
 
-        $currentInfo = (array)current($info);
+        $currentInfo = (array) current($info);
         $currentDate = key($info);
 
         $persent = $this->calculatePersent($info);
 
-        dump([
-            'symbol' => $metaData['2. Symbol'],
-            'name' => 'TechFinancials Inc (TECH)',
-            'last_value' =>  $currentInfo['1. open'],
-            'last_date' => $currentDate,
-            'persent' => $persent . '%',
-            'volume' => $currentInfo['5. volume']
-        ]);
-        die;
-
         return [
             'symbol' => $metaData['2. Symbol'],
             'name' => 'TechFinancials Inc (TECH)',
-            'last_value' =>  $currentInfo['1. open'],
+            'last_value' => $currentInfo['1. open'],
             'last_date' => $currentDate,
             'persent' => $persent . '%',
-            'volume' => $currentInfo['5. volume']
+            'volume' => $currentInfo['5. volume'],
         ];
     }
 
     public function calculatePersent(array $info)
     {
-        $second = (array)current(array_slice($info, 1, 1));
-        $current = (array)current($info);
+        $second = (array) current(array_slice($info, 1, 1));
+        $current = (array) current($info);
 
         $current = $current['1. open'];
         $prev = $second['4. close'];
 
         return round(($current - $prev) / $prev * 100, 1);
+    }
+
+    /**
+     * @Route("/calc", name="calc")
+     */
+    public function calculateOnes()
+    {
+        $n = 6;
+
+        $result = 2;
+
+        for ($i = 1; $i < $n; $i++) {
+            $result = 1 + 1 / $result;
+        }
+
+        dump($result);
+        die;
+    }
+
+    /**
+     * @Route("/fill-array", name="fill-array")
+     */
+    public function fillArray()
+    {
+        $n = 6;
+        $array = [];
+        $direction = 'up';
+
+        $array[0][0] = 1;
+        $array[$n - 1][$n - 1] = $n * $n;
+        $value = 1;
+
+        for ($line = 0; $line < $n; $line++) {
+            for ($i = 0; $i <= $line; $i++) {
+                if ($direction === 'up') {
+                    $array[$i][$line - $i] = $value;
+                } else {
+                    $array[$line - $i][$i] = $value;
+                }
+
+                $value++;
+            }
+
+            $direction = $direction === 'up' ? 'down' : 'up';
+        }
+
+        $direction = $direction === 'up' ? 'down' : 'up';
+
+
+        for ($line = 0; $line < $n - 1; $line++) {
+            for ($i = 0; $i <= $n - 2 - $line; $i++) {
+                if ($direction === 'up') {
+                    $array[$n - 1 - $i][$line + $i + 1] = $value;
+                } else {
+                    $array[1 + $line + $i][$n - 1 - $i] = $value;
+                }
+
+                $value++;
+            }
+
+            $direction = $direction === 'up' ? 'down' : 'up';
+        }
+
+
+        for ($y = 0; $y < $n; $y++) {
+            for ($x = 0; $x < $n; $x++) {
+                if (isset($array[$y][$x])) {
+                    echo $array[$y][$x] . ' ';
+                } else {
+                    echo (0) . ' ';
+                }
+            }
+
+            echo "<br>";
+        }
+        die;
+    }
+
+    /**
+     * @Route("/brutforce", name="brutforce")
+     */
+    public function brutforceAction()
+    {
+        $password = 'accaaaaab';
+        $length = 1;
+        $result = '';
+
+        while (true) {
+            $result = $this->runForce($password, $length);
+
+            if ($result) {
+                break;
+            }
+
+            $length++;
+        }
+
+        dump($result);
+        die;
+    }
+
+    /**
+     * @Route("/anubis-view", name="anubis_view")
+     */
+    public function anubisView()
+    {
+        return $this->render('@App/Page/anubis.html.twig');
+    }
+
+    /**
+     * @Route("/anubis", name="anubis")
+     */
+    public function anubis(Request $request)
+    {
+//        $key = $request->query->get('key');
+//        $message = $request->query->get('message');
+        $key = '123';
+        $message = '321asdsadadasdasdsadasdasdasdasdasdsadas3asdssas';
+        $encryptedMessage = $request->query->get('encrypted-message');
+        $anubis = $this->get('learning.anubis.service');
+
+        $anubis->setKey($key);
+
+
+        $enc = $anubis->encrypt($message);
+        $dec = $anubis->decrypt($enc);
+
+        return new Response($dec);
+
+//        if ($message) {
+//            $enc = $anubis->encrypt($message);
+//            return new Response($enc);
+//        }
+//
+//        if ($encryptedMessage) {
+//            $dec = $anubis->decrypt($encryptedMessage);
+//            return new Response($dec);
+//        }
+    }
+
+    private function runForce($password, $length, $generatedPasswords = '')
+    {
+        $availableChars = ['a', 'b', 'c'];
+
+        if (strlen($generatedPasswords) === $length) {
+            if ($password === $generatedPasswords) {
+                return $generatedPasswords;
+            }
+        } else {
+            foreach ($availableChars as $availableChar) {
+                $result = $this->runForce($password, $length, $generatedPasswords . $availableChar);
+                if ($result) {
+                    return $result;
+                }
+            }
+        }
     }
 }

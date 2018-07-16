@@ -1,35 +1,38 @@
 <?php
+declare(strict_types = 1);
 
 namespace AppBundle\Services;
 
-/**
- * Class TranslatorService
- * @package AppBundle\Services
- */
 class TranslatorService
 {
+    private const TRANSLATE_URL = 'http://translate.google.ru/translate_a/t';
+
     /**
      * @param string $string
+     * @param string $langFrom
+     * @param string $langTo
+     * @return mixed
      */
-    public function translate(string $string)
+    public function translate(string $string, string $langFrom, string $langTo)
     {
+        $queryData = [
+            'client' => 'x',
+            'q'      => $string,
+            'sl'     => $langFrom,
+            'tl'     => $langTo,
+        ];
 
-        $client = new \Google_Client();
-        $client->setAuthConfig('AIzaSyA03m6q_8oLqrbfVJz9dHY7U2PhfW6bCPE');
+        $options = [
+            'http' => [
+                'user_agent' => 'Mozilla/5.0 (Windows NT 6.0; rv:26.0) Gecko/20100101 Firefox/26.0',
+                'method'     => 'POST',
+                'header'     => 'Content-type: application/x-www-form-urlencoded',
+                'content'    => http_build_query($queryData)
+            ]
+        ];
+        $context = stream_context_create($options);
+        $response = file_get_contents(self::TRANSLATE_URL, false, $context);
 
-        $client->setScopes(['https://www.googleapis.com/auth/books']);
-        $service = new \Google_Service_Books($client);
-        $results = $service->volumes->listVolumes('Henry David Thoreau');
-
-        dump($results);
-        die;
-
-        $value = json_encode([
-            'q' => $string,
-            'source' => 'en',
-            'targer' => 'ru',
-            'format' => 'text'
-        ]);
+        return $response;
     }
-
 }

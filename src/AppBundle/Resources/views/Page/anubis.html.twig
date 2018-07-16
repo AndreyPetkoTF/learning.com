@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+        <label for="">Ключ</label><br>
+        <input type="text" id="key" name="key"><br>
+        <label for="">Сообщение</label><br>
+        <input type="text" id="message" name="message"><br>
+
+        <label for="">Зашифрованное сообщение</label><br>
+        <input type="text" id="encrypted-message" name="encrypted-message">
+        <br>
+        <button type="submit" id="submit">
+            Отправить
+        </button>
+        <br>
+        <br>
+        Результат: <br>
+        <input type="text" id="result">
+
+    <script
+            src="https://code.jquery.com/jquery-2.2.4.min.js"
+            integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+            crossorigin="anonymous"></script>
+    <script>
+        $('#submit').click(function () {
+             var key = $('#key').val();
+             var message = $('#message').val();
+             var encMessage = $('#encrypted-message').val();
+
+             var url = '/anubis?key=' + key;
+
+             if (message) {
+                 url += '&message=' + message;
+             }
+
+             if(encMessage) {
+                 url += '&encrypted-message=' + encMessage;
+             }
+
+            $.get(url, function(data) {
+                $('#result').val(data);
+            });
+        });
+    </script>
+</body>
+</html>

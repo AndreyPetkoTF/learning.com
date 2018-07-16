@@ -89,6 +89,15 @@ services:
   learning.consumer.mail_sender:
     class: AppBundle\Services\RabbitMq\MailSenderConsumer
 
+  learning.rsa.service:
+    class: AppBundle\Services\RsaExample
+
+  learning.anubis.service:
+    class: AppBundle\Services\Anubis\Anubis
+
+  learning.anubis2.service:
+      class: AppBundle\Services\Anubis\Anubis2
+
 
   # FACTORIES
   learning.factory.customer:

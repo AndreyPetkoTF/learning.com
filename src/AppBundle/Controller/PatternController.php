@@ -105,7 +105,7 @@ class PatternController extends Controller
         $anotherFactory = new JsonFactory();
         $entity = $anotherFactory->createText('boofar');
 
-        dump($entity);
+        dump(get_class($entity));
         die;
     }
 }
